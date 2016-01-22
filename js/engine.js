@@ -80,8 +80,17 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
+
+    function checkCollisions() {
+        allEnemies.forEach(function (enemy) {
+            if ((enemy.y === player.y) && (player.x >= (enemy.x - 50)) && (player.x <= (enemy.x + 80))) {
+                player = new Player();
+            };
+        });
+    }
+
 
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
@@ -136,6 +145,13 @@ var Engine = (function(global) {
             }
         }
 
+        // Score
+        ctx.fillStyle = "rgb(250, 250, 250)";
+        ctx.font = "24px Helvetica";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText("Score: " + player.runsCompleted, 32, 64);
+
         renderEntities();
     }
 
@@ -159,7 +175,7 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -180,4 +196,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+
 })(this);
