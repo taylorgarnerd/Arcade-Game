@@ -79,6 +79,26 @@ Player.prototype.handleInput = function(key) {
     this.y += direction[key][1];
 };
 
+var Bonus = function () {
+    var sprites = [
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png'
+    ];
+
+    this.sprite = sprites[Math.floor(Math.random() * 3)];
+
+    //this.sprite = sprites[0];
+
+    //this.sprite = 'images/Gem Blue.png';
+
+    this.x = 0 + (101 * Math.floor(Math.random() * 5));
+    this.y = 62 + (85.5 * (Math.floor(Math.random() * 3)));
+}
+
+Bonus.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -87,6 +107,8 @@ var allEnemies = [];
 allEnemies[0] = new Enemy();
 allEnemies[1] = new Enemy();
 allEnemies[2] = new Enemy();
+
+var bonus = new Bonus();
 
 var player = new Player();
 
