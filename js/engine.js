@@ -29,6 +29,10 @@ var Engine = (function(global) {
     canvas.height = 606;
     doc.body.appendChild(canvas);
 
+    if (!localStorage.highscore) {
+        localStorage.highscore = 0;
+    }
+
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
@@ -86,6 +90,7 @@ var Engine = (function(global) {
     function checkCollisions() {
         allEnemies.forEach(function (enemy) {
             if ((enemy.y === player.y) && (player.x >= (enemy.x - 50)) && (player.x <= (enemy.x + 80))) {
+                localStorage.highscore = Math.max(player.score, localStorage.highscore);
                 player = new Player();
                 if (!bonus) {
                     bonus = new Bonus();
@@ -162,6 +167,7 @@ var Engine = (function(global) {
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
         ctx.fillText("Score: " + player.score, 32, 64);
+        ctx.fillText("High Score: " + localStorage.highscore, 320, 64);
 
         renderEntities();
     }
