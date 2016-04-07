@@ -39,7 +39,7 @@ var Player = function () {
     this.sprite = 'images/char-boy.png';
     this.x = 202;
     this.y = 404;
-    this.runsCompleted = 0;
+    this.score = 0;
 };
 
 Player.prototype.update = function () {
@@ -47,8 +47,9 @@ Player.prototype.update = function () {
     *increment runs completed counter by one
     */
     if (this.y <= 0) {
-        this.runsCompleted += 1;
+        this.score += 1;
         this.y = 404;
+        bonus = new Bonus();
     };
 
     //Prevent the player from moving outside of the gride
@@ -79,6 +80,24 @@ Player.prototype.handleInput = function(key) {
     this.y += direction[key][1];
 };
 
+var Bonus = function () {
+    var sprites = [
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png'
+    ];
+
+    this.value = Math.floor(Math.random() * 3)
+    this.sprite = sprites[this.value];
+    this.multiplier = 5 * (this.value + 1);
+
+    this.x = 0 + (101 * Math.floor(Math.random() * 5));
+    this.y = 62 + (85.5 * (Math.floor(Math.random() * 3)));
+}
+
+Bonus.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -87,6 +106,8 @@ var allEnemies = [];
 allEnemies[0] = new Enemy();
 allEnemies[1] = new Enemy();
 allEnemies[2] = new Enemy();
+
+var bonus = new Bonus();
 
 var player = new Player();
 
