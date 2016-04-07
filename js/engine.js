@@ -87,8 +87,19 @@ var Engine = (function(global) {
         allEnemies.forEach(function (enemy) {
             if ((enemy.y === player.y) && (player.x >= (enemy.x - 50)) && (player.x <= (enemy.x + 80))) {
                 player = new Player();
+                if (!bonus) {
+                    bonus = new Bonus();
+                }
             };
         });
+
+        if (bonus) {
+            if (bonus.y === player.y && bonus.x === player.x) {
+                player.score += bonus.multiplier;
+                bonus = null;
+            }; 
+        }
+        
     }
 
 
@@ -150,7 +161,7 @@ var Engine = (function(global) {
         ctx.font = "24px Helvetica";
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
-        ctx.fillText("Score: " + player.runsCompleted, 32, 64);
+        ctx.fillText("Score: " + player.score, 32, 64);
 
         renderEntities();
     }
@@ -163,7 +174,9 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-         bonus.render();
+        if(bonus) {
+            bonus.render();
+        }
 
         allEnemies.forEach(function(enemy) {
             enemy.render();

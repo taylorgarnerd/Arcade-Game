@@ -39,7 +39,7 @@ var Player = function () {
     this.sprite = 'images/char-boy.png';
     this.x = 202;
     this.y = 404;
-    this.runsCompleted = 0;
+    this.score = 0;
 };
 
 Player.prototype.update = function () {
@@ -47,8 +47,9 @@ Player.prototype.update = function () {
     *increment runs completed counter by one
     */
     if (this.y <= 0) {
-        this.runsCompleted += 1;
+        this.score += 1;
         this.y = 404;
+        bonus = new Bonus();
     };
 
     //Prevent the player from moving outside of the gride
@@ -86,11 +87,9 @@ var Bonus = function () {
         'images/Gem Orange.png'
     ];
 
-    this.sprite = sprites[Math.floor(Math.random() * 3)];
-
-    //this.sprite = sprites[0];
-
-    //this.sprite = 'images/Gem Blue.png';
+    this.value = Math.floor(Math.random() * 3)
+    this.sprite = sprites[this.value];
+    this.multiplier = 5 * (this.value + 1);
 
     this.x = 0 + (101 * Math.floor(Math.random() * 5));
     this.y = 62 + (85.5 * (Math.floor(Math.random() * 3)));
