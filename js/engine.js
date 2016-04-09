@@ -23,6 +23,8 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        state = "start",
+        playerSprite = '',
         lastTime;
 
     canvas.width = 505;
@@ -91,7 +93,7 @@ var Engine = (function(global) {
         allEnemies.forEach(function (enemy) {
             if ((enemy.y === player.y) && (player.x >= (enemy.x - 50)) && (player.x <= (enemy.x + 80))) {
                 localStorage.highscore = Math.max(player.score, localStorage.highscore);
-                player = new Player();
+                player = new Player(playerSprite);
                 if (!bonus) {
                     bonus = new Bonus();
                 }
@@ -120,6 +122,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        selector.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -169,7 +172,13 @@ var Engine = (function(global) {
         ctx.fillText("Score: " + player.score, 32, 64);
         ctx.fillText("High Score: " + localStorage.highscore, 320, 64);
 
-        renderEntities();
+        if (state == "start") {
+            renderPlayerSelect();
+        } else {
+            renderEntities();
+        }
+
+        //renderEntities();
     }
 
     /* This function is called by the render function and is called on each game
@@ -191,6 +200,47 @@ var Engine = (function(global) {
         player.render();
     }
 
+    function renderPlayerSelect() {
+        var options = [
+            [0, 'images/char-cat-girl.png'],
+            [101, 'images/char-horn-girl.png'],
+            [202, 'images/char-pink-girl.png'],
+            [303, 'images/char-boy.png'],
+            [404, 'images/char-princess-girl.png']
+        ];
+
+        selector.render();
+
+        for (i = 0; i < options.length; i++) {
+            ctx.drawImage(Resources.get(options[i][1]), options[i][0], 303);
+
+            if (options[i][0] === selector.x) {
+                playerSprite = options[i][1];
+            }
+        }
+
+        ctx.fillStyle = "rgb(250, 250, 250)";
+        ctx.font = "24px Helvetica";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText("Press any key to play", 250, 202);
+
+        document.onkeypress = function() {
+            player = new Player(playerSprite);
+            state = "play";
+        }
+    }
+
+    function renderStart() {
+        ctx.fillStyle = "rgb(250, 250, 250)";
+        ctx.font = "24px Helvetica";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText("Press any key to play", 250, 202);
+
+        document.onkeypress = function() {state = "play"}
+    }
+
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
@@ -209,9 +259,14 @@ var Engine = (function(global) {
         'images/grass-block.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
         'images/Gem Blue.png',
         'images/Gem Green.png',
-        'images/Gem Orange.png'
+        'images/Gem Orange.png',
+        'images/Star.png'
     ]);
     Resources.onReady(init);
 

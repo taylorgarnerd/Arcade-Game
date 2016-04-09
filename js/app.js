@@ -35,10 +35,11 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function () {
-    this.sprite = 'images/char-boy.png';
-    this.x = 202;
-    this.y = 404;
+var Player = function (URL, x, y) {
+    this.sprite = URL || '';
+    
+    this.x = x || 202;
+    this.y = y || 404;
     this.score = 0;
 };
 
@@ -73,7 +74,8 @@ Player.prototype.handleInput = function(key) {
         'left': [-101, 0],
         'up': [0, -85.5],
         'right': [101, 0],
-        'down': [0, 85.5]
+        'down': [0, 85.5],
+        'enter': [0,0]
     };
 
     this.x += direction[key][0];
@@ -99,6 +101,41 @@ Bonus.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+var Selector = function () {
+    this.sprite = 'images/Star.png';
+
+    this.x = 0;
+    this.y = 202;
+}
+
+Selector.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
+
+Selector.prototype.update = function() {
+    if (this.x <= 0) {
+        this.x = 0;
+    }
+    if (this.x >= 404) {
+        this.x = 404;
+    }
+    if (this.y >= 404) {
+        this.y = 404;
+    };
+}
+
+Selector.prototype.handleInput = function(key) {
+    var direction = {
+        'left': [-101, 0],
+        'up': [0, -85.5],
+        'right': [101, 0],
+        'down': [0, 85.5],
+        'enter': [0,0]
+    };
+
+    this.x += direction[key][0];
+}
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
@@ -107,7 +144,15 @@ allEnemies[0] = new Enemy();
 allEnemies[1] = new Enemy();
 allEnemies[2] = new Enemy();
 
+// var playerChoices = [];
+// playerChoices[0] = new Player();
+// playerChoices[1] = new Player();
+// playerChoices[2] = new Player();
+// playerChoices[3] = new Player();
+
 var bonus = new Bonus();
+
+var selector = new Selector();
 
 var player = new Player();
 
@@ -124,4 +169,5 @@ document.addEventListener('keyup', function(e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
+    selector.handleInput(allowedKeys[e.keyCode]);
 });
