@@ -85,18 +85,24 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
-        updateEntities(dt);
-        checkCollisions();
+        if (state == "play") {
+            updateEntities(dt);
+            checkCollisions();
+        } else {
+            selector.update();
+        }
+        
     }
 
     function checkCollisions() {
         allEnemies.forEach(function (enemy) {
             if ((enemy.y === player.y) && (player.x >= (enemy.x - 50)) && (player.x <= (enemy.x + 80))) {
                 localStorage.highscore = Math.max(player.score, localStorage.highscore);
-                player = new Player(playerSprite);
-                if (!bonus) {
-                    bonus = new Bonus();
-                }
+                // player = new Player(playerSprite);
+                // if (!bonus) {
+                //     bonus = new Bonus();
+                // }
+                state = "gameover";
             };
         });
 
@@ -122,7 +128,6 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
-        selector.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -174,11 +179,11 @@ var Engine = (function(global) {
 
         if (state == "start") {
             renderPlayerSelect();
+        } else if (state == "gameover") {
+            renderGameOver();
         } else {
             renderEntities();
         }
-
-        //renderEntities();
     }
 
     /* This function is called by the render function and is called on each game
@@ -220,25 +225,20 @@ var Engine = (function(global) {
         }
 
         ctx.fillStyle = "rgb(250, 250, 250)";
-        ctx.font = "24px Helvetica";
+        ctx.font = "32px Helvetica";
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
-        ctx.fillText("Press any key to play", 250, 202);
-
-        document.onkeypress = function() {
-            player = new Player(playerSprite);
-            state = "play";
-        }
+        ctx.fillText("Select your player", 250, 475);
     }
 
-    function renderStart() {
+    function renderGameOver() {
         ctx.fillStyle = "rgb(250, 250, 250)";
         ctx.font = "24px Helvetica";
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
-        ctx.fillText("Press any key to play", 250, 202);
-
-        document.onkeypress = function() {state = "play"}
+        ctx.fillText("Game Over", 250, 400);
+        ctx.fillText('Press "Enter" to play again', 250, 435);
+        ctx.fillText('Press "Space" to select a new character', 250, 470);
     }
 
     /* This function does nothing but it could have been a good place to
@@ -246,8 +246,28 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-
+        allEnemies = [];
+        for (i = 0; i < 3; i++) {
+            allEnemies[i] = new Enemy();
+        }
+        bonus = new Bonus();
+        player = new Player(playerSprite);
     }
+
+    document.addEventListener('keyup', function(e) {
+        if (state == "start"  && (e.keyCode < 37 || e.keyCode > 40)) {
+            reset();
+            state = "play";
+        } else if (state == "gameover") {
+            if (e.keyCode == 13) {
+                reset();
+                state = "play";
+            }
+            if (e.keyCode == 32) {
+                state = "start";
+            }
+        }
+    });
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when

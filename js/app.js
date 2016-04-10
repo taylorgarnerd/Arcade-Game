@@ -139,22 +139,8 @@ Selector.prototype.handleInput = function(key) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var allEnemies = [];
-allEnemies[0] = new Enemy();
-allEnemies[1] = new Enemy();
-allEnemies[2] = new Enemy();
-
-// var playerChoices = [];
-// playerChoices[0] = new Player();
-// playerChoices[1] = new Player();
-// playerChoices[2] = new Player();
-// playerChoices[3] = new Player();
-
-var bonus = new Bonus();
 
 var selector = new Selector();
-
-var player = new Player();
 
 
 // This listens for key presses and sends the keys to your
